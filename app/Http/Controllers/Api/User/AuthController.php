@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Number;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -21,13 +22,16 @@ class AuthController extends Controller
         } else {
             $user = User::find($id);
             if (!$user) {
-                return response()->json(['message' => 'user not found'], 200);
+                return response()->json([
+                    'message' => preg_match('/^\d+$/', $id) ? 'user not found' : 'page not found',
+                ], 200);
             }
             return response()->json(['user' => $user, 'message' => 'single user'], 200);
         }
     }
 
-    public function profile(){
+    public function profile()
+    {
         return response()->json(Auth::user());
     }
 
@@ -88,7 +92,7 @@ class AuthController extends Controller
                 'access_token' => $newToken,
                 'token_type' => 'bearer',
                 'expires_in' => JWTAuth::factory()->getTTL() * 60
-            ],201);
+            ], 201);
         } catch (JWTException $e) {
             return response()->json(['error' => 'Token is required or invalid'], 401);
         }
@@ -98,7 +102,7 @@ class AuthController extends Controller
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'user logout successfully']);
     }
 
     protected function respondWithToken($token, $user, $meg)
