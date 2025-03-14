@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
-    public function reset(Request $request){
-        dd($request->all());
+    public function reset(Request $request,$token){
+        return $token;
     }
 }

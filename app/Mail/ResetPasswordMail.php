@@ -13,50 +13,26 @@ class ResetPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-
     public $resetLink;
 
+    /**
+     * Create a new message instance.
+     *
+     * @param string $resetLink
+     */
     public function __construct($resetLink)
     {
         $this->resetLink = $resetLink;
     }
 
     /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Reset Password Mail',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
+     * Build the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return $this
      */
-    public function attachments(): array
-    {
-        return [];
-    }
-
     public function build()
     {
-        return $this->subject('Reset Your Password')
-                    ->view('emails.reset_password');
+        return $this->subject('Password Reset Link')
+                    ->view('emails.reset_password'); // Blade view for the email content
     }
 }
